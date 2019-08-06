@@ -1,15 +1,17 @@
 ---
-title: "Reproducible Research: Peer Assessment 1"
-output: 
+title: 'Reproducible Research: Peer Assessment 1'
+output:
   html_document:
-    keep_md: true
+    keep_md: yes
+  pdf_document: default
+autor: samara0
 ---
 
 
 ```r
 knitr::opts_chunk$set(echo = TRUE, comment=NA)
 ```
-
+##### **IMPORTANT! IF YOU CANNOT SEE FIGURES WHEN YOU OPEN MD FILE, CLICK ON A THIN STRIP (WHICH SEEMS TO BE A COMPRESSED FIGURE) BELOW EACH CODE `knitr::include_graphics(...)` THAT IS SUPPOSED TO INCLUDE THE CORRESPONDING FIGURE. FOR SOME REASON, MY MARKDOWN VIEWER DOES NOT READ THEM IN AUTOMATICALLY, WITHOUT THE EXTRA CLICK. HOWEVER, THE HTML FILE IS OKAY. THANK YOU!**
 
 ## Loading and preprocessing the data
 We first load data into a data frame `df`.
@@ -83,7 +85,7 @@ head(dailysteps, 10)
 2012-10-11      10304
 2012-10-12      17382
 ```
-\newpage
+
 Now, we plot the histogram, using `base::hist` function, with 10 breaks between the bins.
 
 
@@ -103,7 +105,7 @@ png
 knitr::include_graphics("figures/hist_num_steps_no_NA.png")
 ```
 
-<img src="figures/hist_num_steps_no_NA.png" width="480" height="6cm" style="display: block; margin: auto;" />
+<img src="figures/hist_num_steps_no_NA.png" width="300" height="300" style="display: block; margin: auto;" />
 Finally, we compute the mean and the median of number of steps in a day.
 
 ```r
@@ -158,7 +160,7 @@ png
 knitr::include_graphics("figures/plot_avg_steps_no_NA.png")
 ```
 
-<img src="figures/plot_avg_steps_no_NA.png" width="480" height="6cm" style="display: block; margin: auto;" />
+<img src="figures/plot_avg_steps_no_NA.png" width="300" height="300" style="display: block; margin: auto;" />
 
 We now find the largest average number of steps.
 
@@ -261,7 +263,7 @@ png
 knitr::include_graphics("figures/hist_num_steps.png")
 ```
 
-<img src="figures/hist_num_steps.png" width="480" height="6cm" style="display: block; margin: auto;" />
+<img src="figures/hist_num_steps.png" width="300" height="300" style="display: block; margin: auto;" />
 The new histogram has more observations, of course, and so there is a higher frequency in some bins, but the overall shape did not change a lot. <br>
 
 The mean for the new data set is
@@ -315,6 +317,7 @@ avgWeekendSteps <- tapply(newdf$steps[newdf$dayType=='weekend'],
 ```
 Creating and saving the plot:
 
+
 ```r
 ## open jpeg file
 png("figures/activity_by_day_type.png", width = 350, height = 350)
@@ -339,8 +342,11 @@ library(knitr)
 knitr::include_graphics('figures/activity_by_day_type.png')
 ```
 
-<img src="figures/activity_by_day_type.png" width="350" height="6cm" style="display: block; margin: auto;" />
+<img src="figures/activity_by_day_type.png" width="350" height="350" style="display: block; margin: auto;" />
+
 We see the activity does differ, depending on whether it is a weekday or weekend. On Weekdays, it there is a lot of steps made in the morining (around 8-9am), while in the rest of the day the person makes considerably less steps. On weekends, however, the activity is higher during the entire day. 
+
+
 
 
 

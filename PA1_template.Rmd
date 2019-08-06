@@ -1,14 +1,16 @@
 ---
-title: "Reproducible Research: Peer Assessment 1"
-output: 
+title: 'Reproducible Research: Peer Assessment 1'
+output:
   html_document:
-    keep_md: true
+    keep_md: yes
+  pdf_document: default
+autor: samara0
 ---
 
 ```{r setup, include=TRUE}
 knitr::opts_chunk$set(echo = TRUE, comment=NA)
 ```
-
+##### **IMPORTANT! IF YOU CANNOT SEE FIGURES WHEN YOU OPEN MD FILE, CLICK ON A THIN STRIP (WHICH SEEMS TO BE A COMPRESSED FIGURE) BELOW EACH CODE `knitr::include_graphics(...)` THAT IS SUPPOSED TO INCLUDE THE CORRESPONDING FIGURE. FOR SOME REASON, MY MARKDOWN VIEWER DOES NOT READ THEM IN AUTOMATICALLY, WITHOUT THE EXTRA CLICK. HOWEVER, THE HTML FILE IS OKAY. THANK YOU!**
 
 ## Loading and preprocessing the data
 We first load data into a data frame `df`.
@@ -40,10 +42,10 @@ dailysteps <- data.frame(dailysteps)
 head(dailysteps, 10)
 
 ```
-\newpage
+
 Now, we plot the histogram, using `base::hist` function, with 10 breaks between the bins.
 
-```{r, include=T, out.height='6cm', fig.align='center'}
+```{r, include=T, out.height=300, out.width=300, fig.align='center'}
 library(knitr)
 png("figures/hist_num_steps_no_NA.png")
 hist(dailysteps[,1], breaks = 15, main="Histogram of # Steps in a Day", xlab="steps in a day")
@@ -67,7 +69,7 @@ avgsteps <- tapply(df$steps, df$interval, mean, na.rm=TRUE)
 head(avgsteps)
 ```
 The following is the plot of average numer of steps in each interval.
-```{r, include=T, out.height='6cm', fig.align='center'}
+```{r, include=T, out.height=300, out.width=300, fig.align='center'}
 library(knitr)
 png("figures/plot_avg_steps_no_NA.png")
 plot(names(avgsteps),avgsteps,
@@ -114,7 +116,7 @@ newdailysteps <- data.frame(newdailysteps)
 head(newdailysteps)
 ```
 Here is the new histogram
-```{r, include=T, out.height='6cm', fig.align='center'}
+```{r, include=T, out.height=300, out.width=300, fig.align='center'}
 library(knitr)
 png("figures/hist_num_steps.png")
 hist(newdailysteps[,1], breaks = 15, 
@@ -165,7 +167,8 @@ avgWeekendSteps <- tapply(newdf$steps[newdf$dayType=='weekend'],
 
 ```
 Creating and saving the plot:
-```{r, include = T, out.height='6cm', fig.align='center', fig.show=T}
+
+```{r, include = T, out.height=350, out.width=350, fig.align='center', fig.show=T}
 ## open jpeg file
 png("figures/activity_by_day_type.png", width = 350, height = 350)
 
@@ -180,7 +183,10 @@ dev.off()
 library(knitr)
 knitr::include_graphics('figures/activity_by_day_type.png')
 ``` 
+
 We see the activity does differ, depending on whether it is a weekday or weekend. On Weekdays, it there is a lot of steps made in the morining (around 8-9am), while in the rest of the day the person makes considerably less steps. On weekends, however, the activity is higher during the entire day. 
+
+
 
 
 
