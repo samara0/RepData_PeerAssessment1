@@ -1,25 +1,187 @@
 ---
-title: "Reproducible Research: Peer Assessment 1"
-output: 
+title: 'Reproducible Research: Peer Assessment 1'
+output:
   html_document:
-    keep_md: true
+    keep_md: yes
+  pdf_document: default
 ---
+
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE, comment=NA)
+```
 
 
 ## Loading and preprocessing the data
+We first load data into a data frame `df`.
+```{r}
+df <- read.csv("activity.csv")
+head(df)
+```
 
 
 
 ## What is mean total number of steps taken per day?
+For this question, we drop rows with missing number of steps. The new data set is stored in data frame `nm.df` (non-missing df).
+```{r}
+nm.df <- df[!is.na(df$steps), ]
+nm.df$date <- as.character(nm.df$date)
+dim(nm.df)
+head(nm.df)
+```
+Note that during the entire day of Oct 1st the data were not recorded, i.e. are missing. <br>
+To find the sum of steps for each day, we use function `tapply()`. 
+```{r}
 
 
+dailysteps <- tapply(nm.df$steps, nm.df$date, sum)
+```
+For nicer printout, we convert the vector `dailysteps` into a data frame (since `tapply()` function also provided corresponding dates as `dimnames` attribute, which we utilize for the printout).
+```{r}
+dailysteps <- data.frame(dailysteps)
+head(dailysteps, 10)
+
+```
+\newpage
+Now, we plot the histogram, using `base::hist` function, with 10 breaks between the bins.
+
+```{r, out.height='6cm', fig.align='center'}
+library(knitr)
+png("figures/hist_num_steps_no_NA.png")
+hist(dailysteps[,1], breaks = 15, main="Histogram of # Steps in a Day", xlab="steps in a day")
+dev.off()
+knitr::include_graphics("figures/hist_num_steps.png")
+```
+Finally, we compute the mean and the median of number of steps in a day.
+```{r}
+mean(dailysteps[,1])
+
+median(dailysteps[,1])
+```
 
 ## What is the average daily activity pattern?
 
+To find average daily activity, we again use `tapply()` function.
+```{r}
+df$interval <- as.integer(df$interval)
+avgsteps <- tapply(df$steps, df$interval, mean, na.rm=TRUE)
 
+head(avgsteps)
+```
+The following is the plot of average numer of steps in each interval.
+```{r,  out.height='6cm', fig.align='center'}
+library(knitr)
+png("figures/plot_avg_steps_no_NA.png")
+plot(names(avgsteps),avgsteps,
+            type='l',main="Daily Mean # Steps ",
+            xlab='Interval Codes',
+            ylab='Average # Steps')
+dev.off()
+knitr::include_graphics("figures/plot_avg_steps_no_NA.png")
+```
+
+We now find the largest average number of steps.
+```{r}
+max(avgsteps)
+```
+The interval with the maximum value is 
+```{r}
+which.max(avgsteps)
+```
+That is, it is the interval coded with the code `835`, and this is the 104th interval from the beginning of each day. Since $104\cdot 5 = 520$ min =  8:40am, the interval with the largest average number of steps is 8:40 - 8:45 am.
 
 ## Imputing missing values
+The total number of missing values is obtained by
+```{r}
+sum(is.na(df$steps))
+```
 
+We now want to fill in these positions with mean for the corresponding interval. The values are already stored in the vector avgsteps. 
+```{r}
+newdf <- df
+newdf$interval <- as.integer(newdf$interval)
+meansrep <- rep(avgsteps, 61)
+newdf$meansRep <- meansrep
+newdf[is.na(newdf$steps),1] <- newdf$meansRep[is.na(newdf$steps)]
+dim(newdf)
+head(newdf)
+```
+To compute total sum for each day, we again use `tapply()` function.
+```{r}
+newdailysteps <- tapply(newdf$steps, newdf$date, sum)
+```
+We convert `newdailysteps` vector into data frame, for a nice printout.
+```{r}
+newdailysteps <- data.frame(newdailysteps)
+head(newdailysteps)
+```
+Here is the new histogram
+```{r}
+png("figures/hist_num_steps.png")
+hist(newdailysteps[,1], breaks = 15, 
+     main="Histogram of # Steps in a Day (Imputed)",
+     xlab="steps in a day (imputed)")
+dev.off()
+```
+The new histogram has more observations, of course, and so there is a higher frequency in some bins, but the overall shape did not change a lot. <br>
+
+The mean for the new data set is
+```{r}
+mean(newdailysteps[,1])
+```
+and new median
+```{r}
+median(newdailysteps[,1])
+
+```
+
+Because missing values were replaced by mean values, the mean didn't change. To see this rigorously, let $m$ = number of days with non-missing values (in fact, $m=53$), $n$ = number of intervals in a day (in fact, $n=288$), and $a_{ij}$ = number of steps in the $i$-th day and in the $j$-th 5-minute interval of that day. Also, note that every missing cell is in a day where all other entries are missing (i.e. the entire days are missing a record). Without loss of generality, we may assume in first $m$ days no observation is missing, and in the remaining $k$ days all are missing (with $m+k=61$). Then, 
+\begin{align}
+\text{old mean} &= {1\over m} \sum_{i=1}^m \sum_{j=1}^k a_{ij} \\
+\text{and} \\
+\text{new mean} &= {1\over m+k} \left(\sum_{i=1}^m \sum_{j=1}^n a_{ij} + k \sum_{j=1}^m \left({1\over m} \sum_{i=1}^n a_{ij} \right)\right)
+\end{align}
+Simple algebra reveals that these two expressions are the same, which explains why the two means are the same (based of our choice of filling out missing data).
+
+The new median, however, is different, and is equal to the mean. This is not surprising, since there were a lot of missing values and all were replaced by the mean value. The overall affect was that we increased frequency of the bin where the old mean was. 
+
+In conclusion, this does **not** seem to be the best way for imputing.
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
+```{r}
+newdf$date <- as.Date(newdf$date)
+newdf$day <- weekdays(newdf$date)
+newdf$dayType <- character(dim(newdf)[1])
+newdf$dayType[!((newdf$day=='Saturday') | (newdf$day=='Sunday'))] <- 'weekday'
+newdf$dayType[newdf$dayType==""] <- 'weekend'
+```
+```{r}
+avgWeekdaySteps <- tapply(newdf$steps[newdf$dayType=='weekday'], 
+                          newdf$interval[newdf$dayType=='weekday'], mean)
+
+avgWeekendSteps <- tapply(newdf$steps[newdf$dayType=='weekend'], 
+                          newdf$interval[newdf$dayType=='weekend'], mean)
+
+```
+Creating and saving the plot:
+```{r, include = T, out.height='6cm', fig.align='center', fig.show=T}
+## open jpeg file
+jpeg("figures/activity_by_day_type.jpg", width = 350, height = 350)
+
+par(mfrow=c(2,1))
+plot(names(avgWeekdaySteps),avgWeekdaySteps, 
+     type='l',main="Weekdays",xlab="",ylab="# steps")
+plot(names(avgWeekendSteps),avgWeekendSteps, 
+     type='l',main="Weekends",xlab="Interval Code",ylab="# steps")
+
+## close the file
+dev.off()
+```
+```{r, out.width='75%', fig.align='center'}
+library(knitr)
+knitr::include_graphics('figures/activity_by_day_type.jpg')
+``` 
+We see the activity does differ, depending on whether it is a weekday or weekend. On Weekdays, it there is a lot of steps made in the morining (around 8-9am), while in the rest of the day the person makes considerably less steps. On weekends, however, the activity is higher during the entire day. 
+
+
+
