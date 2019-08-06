@@ -104,7 +104,7 @@ png
 knitr::include_graphics("figures/hist_num_steps.png")
 ```
 
-<img src="figures/hist_num_steps.png" width="480" height="6cm" style="display: block; margin: auto;" />
+<img src="figures/hist_num_steps.png" height="6cm" style="display: block; margin: auto;" />
 Finally, we compute the mean and the median of number of steps in a day.
 
 ```r
@@ -245,6 +245,7 @@ head(newdailysteps)
 Here is the new histogram
 
 ```r
+library(knitr)
 png("figures/hist_num_steps.png")
 hist(newdailysteps[,1], breaks = 15, 
      main="Histogram of # Steps in a Day (Imputed)",
@@ -256,6 +257,12 @@ dev.off()
 png 
   2 
 ```
+
+```r
+knitr::include_graphics("figures/hist_num_steps.png")
+```
+
+<img src="figures/hist_num_steps.png" width="480" />
 The new histogram has more observations, of course, and so there is a higher frequency in some bins, but the overall shape did not change a lot. <br>
 
 The mean for the new data set is
