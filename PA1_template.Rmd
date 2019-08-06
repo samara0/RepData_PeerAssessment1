@@ -1,9 +1,8 @@
 ---
-title: 'Reproducible Research: Peer Assessment 1'
-output:
+title: "Reproducible Research: Peer Assessment 1"
+output: 
   html_document:
-    keep_md: yes
-  pdf_document: default
+    keep_md: true
 ---
 
 ```{r setup, include=TRUE}
@@ -44,12 +43,12 @@ head(dailysteps, 10)
 \newpage
 Now, we plot the histogram, using `base::hist` function, with 10 breaks between the bins.
 
-```{r, out.height='6cm', fig.align='center'}
+```{r, include=T, out.height='6cm', fig.align='center'}
 library(knitr)
 png("figures/hist_num_steps_no_NA.png")
 hist(dailysteps[,1], breaks = 15, main="Histogram of # Steps in a Day", xlab="steps in a day")
 dev.off()
-knitr::include_graphics("figures/hist_num_steps.png")
+knitr::include_graphics("figures/hist_num_steps_no_NA.png")
 ```
 Finally, we compute the mean and the median of number of steps in a day.
 ```{r}
@@ -68,7 +67,7 @@ avgsteps <- tapply(df$steps, df$interval, mean, na.rm=TRUE)
 head(avgsteps)
 ```
 The following is the plot of average numer of steps in each interval.
-```{r,  out.height='6cm', fig.align='center'}
+```{r, include=T, out.height='6cm', fig.align='center'}
 library(knitr)
 png("figures/plot_avg_steps_no_NA.png")
 plot(names(avgsteps),avgsteps,
@@ -115,7 +114,7 @@ newdailysteps <- data.frame(newdailysteps)
 head(newdailysteps)
 ```
 Here is the new histogram
-```{r}
+```{r, include=T, out.height='6cm', fig.align='center'}
 library(knitr)
 png("figures/hist_num_steps.png")
 hist(newdailysteps[,1], breaks = 15, 
@@ -168,7 +167,7 @@ avgWeekendSteps <- tapply(newdf$steps[newdf$dayType=='weekend'],
 Creating and saving the plot:
 ```{r, include = T, out.height='6cm', fig.align='center', fig.show=T}
 ## open jpeg file
-jpeg("figures/activity_by_day_type.jpg", width = 350, height = 350)
+png("figures/activity_by_day_type.png", width = 350, height = 350)
 
 par(mfrow=c(2,1))
 plot(names(avgWeekdaySteps),avgWeekdaySteps, 
@@ -178,10 +177,8 @@ plot(names(avgWeekendSteps),avgWeekendSteps,
 
 ## close the file
 dev.off()
-```
-```{r, out.width='75%', fig.align='center'}
 library(knitr)
-knitr::include_graphics('figures/activity_by_day_type.jpg')
+knitr::include_graphics('figures/activity_by_day_type.png')
 ``` 
 We see the activity does differ, depending on whether it is a weekday or weekend. On Weekdays, it there is a lot of steps made in the morining (around 8-9am), while in the rest of the day the person makes considerably less steps. On weekends, however, the activity is higher during the entire day. 
 

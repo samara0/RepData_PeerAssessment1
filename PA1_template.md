@@ -1,9 +1,8 @@
 ---
-title: 'Reproducible Research: Peer Assessment 1'
-output:
+title: "Reproducible Research: Peer Assessment 1"
+output: 
   html_document:
-    keep_md: yes
-  pdf_document: default
+    keep_md: true
 ---
 
 
@@ -101,10 +100,10 @@ png
 ```
 
 ```r
-knitr::include_graphics("figures/hist_num_steps.png")
+knitr::include_graphics("figures/hist_num_steps_no_NA.png")
 ```
 
-<img src="figures/hist_num_steps.png" height="6cm" style="display: block; margin: auto;" />
+<img src="figures/hist_num_steps_no_NA.png" width="480" height="6cm" style="display: block; margin: auto;" />
 Finally, we compute the mean and the median of number of steps in a day.
 
 ```r
@@ -262,7 +261,7 @@ png
 knitr::include_graphics("figures/hist_num_steps.png")
 ```
 
-<img src="figures/hist_num_steps.png" width="480" />
+<img src="figures/hist_num_steps.png" width="480" height="6cm" style="display: block; margin: auto;" />
 The new histogram has more observations, of course, and so there is a higher frequency in some bins, but the overall shape did not change a lot. <br>
 
 The mean for the new data set is
@@ -318,7 +317,7 @@ Creating and saving the plot:
 
 ```r
 ## open jpeg file
-jpeg("figures/activity_by_day_type.jpg", width = 350, height = 350)
+png("figures/activity_by_day_type.png", width = 350, height = 350)
 
 par(mfrow=c(2,1))
 plot(names(avgWeekdaySteps),avgWeekdaySteps, 
@@ -337,10 +336,10 @@ png
 
 ```r
 library(knitr)
-knitr::include_graphics('figures/activity_by_day_type.jpg')
+knitr::include_graphics('figures/activity_by_day_type.png')
 ```
 
-<img src="figures/activity_by_day_type.jpg" width="75%" style="display: block; margin: auto;" />
+<img src="figures/activity_by_day_type.png" width="350" height="6cm" style="display: block; margin: auto;" />
 We see the activity does differ, depending on whether it is a weekday or weekend. On Weekdays, it there is a lot of steps made in the morining (around 8-9am), while in the rest of the day the person makes considerably less steps. On weekends, however, the activity is higher during the entire day. 
 
 
